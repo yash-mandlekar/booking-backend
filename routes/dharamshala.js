@@ -16,8 +16,8 @@ const dharamshalaSchema = new mongoose.Schema(
       required: true,
     },
     owner: {
-      type: String,
-      required: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "user",
     },
     contact: {
       type: String,

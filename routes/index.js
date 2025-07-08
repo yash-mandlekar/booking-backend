@@ -1,6 +1,12 @@
 var express = require("express");
-const { register, login } = require("../controllers/userController");
-const { createVenue, getVenues, getVenueById, bookDate } = require("../controllers/venueController");
+const { register, login, me } = require("../controllers/userController");
+const {
+  createVenue,
+  getVenues,
+  getVenueById,
+  bookDate,
+} = require("../controllers/venueController");
+const { getAdmins } = require("../controllers/adminController");
 var router = express.Router();
 
 function authorizeRoles(...allowedRoles) {
@@ -19,11 +25,14 @@ router.get("/", function (req, res, next) {
   });
 });
 
-router.post("/register", register);
+router.get("/me", me);
 router.post("/login", login);
+router.post("/register", register);
 
-router.post("/venues", createVenue);
+router.get("/admins", getAdmins);
+
 router.get("/venues", getVenues);
+router.post("/venues", createVenue);
 router.get("/venues/:id", getVenueById);
 router.post("/venues/:id/book", bookDate);
 

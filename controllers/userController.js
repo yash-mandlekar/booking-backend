@@ -1,5 +1,18 @@
 const User = require("../routes/users");
 
+// Me
+exports.me = async (req, res) => {
+  try {
+    const { id } = req.body;
+    const user = await User.findOne({ _id: id });
+    if (!user) return res.status(400).json({ message: "User does not exists" });
+
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
 // Register
 exports.register = async (req, res) => {
   try {
