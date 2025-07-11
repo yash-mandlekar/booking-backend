@@ -3,8 +3,9 @@ const User = require("../routes/users");
 // Me
 exports.me = async (req, res) => {
   try {
-    const { id } = req.body;
-    const user = await User.findOne({ _id: id });
+    const { _id } = req.body;
+
+    const user = await User.findOne({ _id: _id });
     if (!user) return res.status(400).json({ message: "User does not exists" });
 
     res.status(200).json(user);
@@ -38,10 +39,12 @@ exports.register = async (req, res) => {
 // Login
 exports.login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { contact, password } = req.body;
 
-    // Find user by email
-    const user = await User.findOne({ email });
+    // Find user by contact
+
+    const user = await User.findOne({ contact });
+
     if (!user) return res.status(404).json({ message: "User not found" });
 
     // Check plain-text password
@@ -52,7 +55,7 @@ exports.login = async (req, res) => {
     res.json({
       message: "Login successful",
       user: {
-        id: user._id,
+        _id: user._id,
         name: user.name,
         email: user.email,
         role: user.role,

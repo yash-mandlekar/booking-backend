@@ -15,12 +15,18 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     contact: {
+      type: Number,
+      index: true,
+      required: true,
+    },
+    email: {
       type: String,
-      match: [/^\+91-\d{10}$/, "Please enter a valid Indian contact number"],
+      lowercase: true,
+      trim: true,
     },
     role: {
       type: String,
-      enum: ["admin", "super_admin", "user"],
+      enum: ["admin", "super admin"],
       default: "user",
     },
   },

@@ -25,7 +25,7 @@ router.get("/", function (req, res, next) {
   });
 });
 
-router.get("/me", me);
+router.post("/me", me);
 router.post("/login", login);
 router.post("/register", register);
 

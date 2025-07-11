@@ -15,6 +15,9 @@ const dharamshalaSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    mapUrl: {
+      type: String,
+    },
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "user",
@@ -22,7 +25,7 @@ const dharamshalaSchema = new mongoose.Schema(
     contact: {
       type: String,
       required: true,
-      match: [/^\+91-\d{10}$/, "Please enter a valid Indian contact number"],
+      match: [/^\d{10}$/, "Please enter a valid Indian contact number"],
     },
     availableDates: {
       type: [Date],
