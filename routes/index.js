@@ -5,6 +5,10 @@ const {
   getVenues,
   getVenueById,
   bookDate,
+  removeBookDate,
+  updateVenue,
+  deleteVenue,
+  getAllVenues,
 } = require("../controllers/venueController");
 const { getAdmins } = require("../controllers/adminController");
 var router = express.Router();
@@ -31,9 +35,15 @@ router.post("/register", register);
 
 router.get("/admins", getAdmins);
 
+router.get("/allvenues", getAllVenues);
+
 router.get("/venues", getVenues);
 router.post("/venues", createVenue);
+router.put("/venues", updateVenue);
 router.get("/venues/:id", getVenueById);
+router.delete("/venues/:id", deleteVenue);
+
 router.post("/venues/:id/book", bookDate);
+router.post("/venues/:id/remove-book", removeBookDate);
 
 module.exports = router;
