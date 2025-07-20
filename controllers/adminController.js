@@ -1,11 +1,38 @@
 const User = require("../routes/users");
 
-// Me
+// Get all admins
 exports.getAdmins = async (req, res) => {
   try {
-    const user = await User.find();
+    const users = await User.find(); // you might want to filter with { role: 'admin' }
+    res.status(200).json(users);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 
-    res.status(200).json(user);
+// Update admin by ID
+exports.updateAdmin = async (req, res) => {
+  try {
+    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+    if (!updatedUser) {
+      return res.status(404).json({ message: "Admin not found" });
+    }
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// Delete admin by ID
+exports.deleteAdmin = async (req, res) => {
+  try {
+    const deletedUser = await User.findByIdAndDelete(req.params.id);
+    if (!deletedUser) {
+      return res.status(404).json({ message: "Admin not found" });
+    }
+    res.status(200).json({ message: "Admin deleted successfully" });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

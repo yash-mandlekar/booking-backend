@@ -10,17 +10,12 @@ const {
   deleteVenue,
   getAllVenues,
 } = require("../controllers/venueController");
-const { getAdmins } = require("../controllers/adminController");
+const {
+  getAdmins,
+  updateAdmin,
+  deleteAdmin,
+} = require("../controllers/adminController");
 var router = express.Router();
-
-function authorizeRoles(...allowedRoles) {
-  return (req, res, next) => {
-    if (!allowedRoles.includes(req.user.role)) {
-      return res.status(403).json({ message: "Access denied" });
-    }
-    next();
-  };
-}
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
@@ -34,6 +29,8 @@ router.post("/login", login);
 router.post("/register", register);
 
 router.get("/admins", getAdmins);
+router.put("/admins/:id", updateAdmin);
+router.delete("/admins/:id", deleteAdmin);
 
 router.get("/allvenues", getAllVenues);
 
