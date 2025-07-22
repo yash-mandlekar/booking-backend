@@ -14,19 +14,18 @@ const {
   getAdmins,
   updateAdmin,
   deleteAdmin,
+  getAdminDashboard,
 } = require("../controllers/adminController");
 var router = express.Router();
 
 /* GET home page. */
-router.get("/", function (req, res, next) {
-  res.json({
-    message: "Server is Running",
-  });
-});
+
 
 router.post("/me", me);
 router.post("/login", login);
 router.post("/register", register);
+
+router.get("/admin/dashboard", getAdminDashboard);
 
 router.get("/admins", getAdmins);
 router.put("/admins/:id", updateAdmin);

@@ -1,4 +1,29 @@
+const Dharamshala = require("../routes/dharamshala");
 const User = require("../routes/users");
+
+exports.getAdminDashboard = async (req, res) => {
+  try {
+    const totalDharamshalas = await Dharamshala.countDocuments();
+
+    const totalBookings = await Dharamshala.aggregate([
+      { $unwind: "$bookedDates" },
+      { $count: "totalBookings" },
+    ]);
+
+    const totalAdmins = await User.countDocuments({ role: "admin" });
+    const totalSuperAdmins = await User.countDocuments({ role: "super admin" });
+
+    res.status(200).json({
+      totalDharamshalas,
+      totalBookings: totalBookings[0]?.totalBookings || 0,
+      totalAdmins,
+      totalSuperAdmins,
+    });
+  } catch (err) {
+    console.error("Error fetching dashboard summary:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
 
 // Get all admins
 exports.getAdmins = async (req, res) => {

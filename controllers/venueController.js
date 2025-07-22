@@ -59,10 +59,10 @@ exports.getVenues = async (req, res) => {
     let venues;
 
     if (user.role === "super admin") {
-      venues = await Venue.find();
+      venues = await Venue.find().populate("owner");
     } else {
       // Return venues owned by this admin
-      venues = await Venue.find({ owner: user._id });
+      venues = await Venue.find({ owner: user._id }).populate("owner");
     }
 
     res.json(venues);
