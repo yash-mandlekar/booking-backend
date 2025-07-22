@@ -20,7 +20,6 @@ var router = express.Router();
 
 /* GET home page. */
 
-
 router.post("/me", me);
 router.post("/login", login);
 router.post("/register", register);
