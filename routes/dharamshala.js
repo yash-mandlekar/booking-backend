@@ -25,6 +25,19 @@ const bookingSchema = new mongoose.Schema(
   },
   { _id: false } // Prevents creation of _id for subdocs
 );
+const inventorySchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+    },
+    description: {
+      type: String,
+    },
+    quantity: {
+      type: Number,
+    },
+  },
+);
 
 const dharamshalaSchema = new mongoose.Schema(
   {
@@ -47,6 +60,10 @@ const dharamshalaSchema = new mongoose.Schema(
     },
     bookedDates: {
       type: [bookingSchema],
+      default: [],
+    },
+    inventory: {
+      type: [inventorySchema],
       default: [],
     },
   },

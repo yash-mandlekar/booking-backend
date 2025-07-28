@@ -9,6 +9,9 @@ const {
   updateVenue,
   deleteVenue,
   getAllVenues,
+  createInventory,
+  updateInventory,
+  removeInventory,
 } = require("../controllers/venueController");
 const {
   getAdmins,
@@ -37,6 +40,10 @@ router.post("/venues", createVenue);
 router.put("/venues", updateVenue);
 router.get("/venues/:id", getVenueById);
 router.delete("/venues/:id", deleteVenue);
+
+router.post("/inventory/:id", createInventory);
+router.put("/inventory/:id", updateInventory);
+router.delete("/inventory/:id/:itemId", removeInventory);
 
 router.post("/venues/:id/book", bookDate);
 router.post("/venues/:id/remove-book", removeBookDate);

@@ -94,15 +94,15 @@ exports.deleteVenue = async (req, res) => {
 // Get a single venue
 exports.getVenueById = async (req, res) => {
   try {
-    const venue = await Venue.findById(req.params.id).populate("owner");
+    const venue = await Venue.findById(req.params.id).populate(
+      "owner inventory"
+    );
     if (!venue) return res.status(404).json({ message: "Venue not found" });
     res.json(venue);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
-
-// Configure Nodemailer transporter
 
 // Helper function to send emails
 const sendEmail = async (to, subject, templateData) => {
@@ -357,6 +357,143 @@ exports.removeBookDate = async (req, res) => {
       message: "Internal server error while processing booking removal",
       code: "SERVER_ERROR",
       error: process.env.NODE_ENV === "development" ? err.message : undefined,
+    });
+  }
+};
+
+// Create new inventory item
+exports.createInventory = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, description, quantity } = req.body;
+
+    // Validate input
+    if (!name || !quantity) {
+      return res.status(400).json({
+        success: false,
+        message: "Name and quantity are required",
+      });
+    }
+
+    const dharamshala = await Venue.findById(id);
+    if (!dharamshala) {
+      return res.status(404).json({
+        success: false,
+        message: "Dharamshala not found",
+      });
+    }
+
+    // Add new inventory item
+    dharamshala.inventory.push({ name, description, quantity });
+    await dharamshala.save();
+    res.status(201).json({
+      success: true,
+      message: "Inventory item added successfully",
+      inventory: dharamshala.inventory,
+    });
+  } catch (error) {
+    console.error("Error creating inventory:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to add inventory item",
+      error: error.message,
+    });
+  }
+};
+
+// Update inventory item
+exports.updateInventory = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { itemId, name, description, quantity } = req.body;
+
+    if (!itemId) {
+      return res.status(400).json({
+        success: false,
+        message: "Item ID is required",
+      });
+    }
+
+    const dharamshala = await Venue.findById(id);
+    if (!dharamshala) {
+      return res.status(404).json({
+        success: false,
+        message: "Dharamshala not found",
+      });
+    }
+
+    // Find the inventory item
+    const itemIndex = dharamshala.inventory.findIndex(
+      (item) => item._id.toString() === itemId
+    );
+
+    if (itemIndex === -1) {
+      return res.status(404).json({
+        success: false,
+        message: "Inventory item not found",
+      });
+    }
+
+    // Update the item
+    if (name) dharamshala.inventory[itemIndex].name = name;
+    if (description) dharamshala.inventory[itemIndex].description = description;
+    if (quantity) dharamshala.inventory[itemIndex].quantity = quantity;
+
+    await dharamshala.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Inventory item updated successfully",
+      inventory: dharamshala.inventory,
+    });
+  } catch (error) {
+    console.error("Error updating inventory:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to update inventory item",
+      error: error.message,
+    });
+  }
+};
+
+// Remove inventory item
+exports.removeInventory = async (req, res) => {
+  try {
+    const { id, itemId } = req.params;
+
+    if (!itemId) {
+      return res.status(400).json({
+        success: false,
+        message: "Item ID is required",
+      });
+    }
+
+    const dharamshala = await Venue.findById(id);
+    if (!dharamshala) {
+      return res.status(404).json({
+        success: false,
+        message: "Dharamshala not found",
+      });
+    }
+
+    // Filter out the item to be removed
+    dharamshala.inventory = dharamshala.inventory.filter(
+      (item) => item._id.toString() !== itemId
+    );
+
+    await dharamshala.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Inventory item removed successfully",
+      inventory: dharamshala.inventory,
+    });
+  } catch (error) {
+    console.error("Error removing inventory:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to remove inventory item",
+      error: error.message,
     });
   }
 };
